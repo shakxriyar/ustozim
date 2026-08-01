@@ -54,23 +54,6 @@
             }
         }
 
-        /* Musiqani yoqish uchun tugma */
-        .music-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            z-index: 10;
-            background: rgba(255, 105, 180, 0.3);
-            border: 1px solid #ffb6c1;
-            color: #ffb6c1;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            backdrop-filter: blur(5px);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
-        }
-
         /* Yuqoridagi she'r qismi */
         .top-poem {
             position: relative;
@@ -82,7 +65,7 @@
             backdrop-filter: blur(5px);
             width: 92%;
             max-width: 340px;
-            margin-top: 40px; /* Tugma bilan ustma-ust tushmasligi uchun */
+            margin-top: 15px;
             text-align: center;
         }
 
@@ -144,13 +127,11 @@
     </style>
 </head>
 <body>
-    <!-- Musiqani yoqish tugmasi -->
-    <button class="music-btn" id="musicBtn">🎵 Musiqani yoqish</button>
 
-    <!-- Orqa fondagi 💋 va boshqa emojilar -->
+    <!-- Orqa fondagi emojilar -->
     <div class="bg-emojis" id="emojiContainer"></div>
 
-    <!-- Telefonga moslashgan ixcham she'r -->
+    <!-- Ixcham she'r -->
     <div class="top-poem">
         <h3>Onajonim</h3>
         <p>
@@ -158,42 +139,50 @@
             Tug'ilgan kuningiz muborak bo'lsin! 💋
         </p>
     </div>
-
     <!-- Yurak chiqadigan joy -->
     <div class="canvas-container">
         <canvas id="heartCanvas"></canvas>
     </div>
     
     <div class="dedication">
-        <h2>7-Avgust Onajonimning Tug'ilgan Kunlari! 🌹</h2>
+        <h2>7-Avgust Onajonim Zeboxonning Tug'ilgan Kunlari! 🌹</h2>
         <div class="sub-title">Sizni yaxshi ko'raman Onajonim</div>
-        <p>Hurmat bilan, o'g'lingiz Shahriyor</p>
+        <p>Hurmat bilan, o'g'lingiz Shahriyor va Shohjahon</p>
     </div>
 
-    <!-- Fon qo'shig'i (Audio) -->
-    <audio id="bgMusic" loop>
-        <source src="https://cdns.freemusicarchive.org/storage/freemusicarchive/music/ccCommunity/KieLoBot/First_Snow/KieLoBot_-_01_-_A_Gentle_Breeze.mp3" type="audio/mp3">
+    <!-- Audio fayl -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="onam.mp3" type="audio/mp3">
     </audio>
 
     <script>
         const music = document.getElementById('bgMusic');
-        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
 
-        // Tugmani bosganda yoki ekranga tekkanda musiqa yangraydi
-        function playMusic() {
-            music.play().then(() => {
-                musicBtn.style.display = 'none'; // Musiqa yoqilgach tugmani yashirish
-            }).catch(e => {
-                console.log("Audio play error:", e);
-            });
+        function startAudio() {
+            if (!isPlaying) {
+                music.currentTime = 95; // 1-minut 35-sekunddan boshlanadi
+                music.play().then(() => {
+                    isPlaying = true;
+                }).catch(error => {
+                    console.log("Audio ijro etilmadi:", error);
+                });
+            }
         }
 
-        musicBtn.addEventListener('click', playMusic);
-        document.body.addEventListener('click', () => {
-            if (music.paused) {
-                playMusic();
-            }
-        }, { once: true });
+        // Ekranning istalgan joyiga bosilganda (yoki tegganda) musiqa darhol boshlanadi
+        document.body.addEventListener('touchstart', startAudio, { once: true });
+        document.body.addEventListener('click', startAudio, { once: true });
+
+        // Sahifa ochilishi bilan avtomat chalib ko'rishga urinish (ba'zi brauzerlar ruxsat beradi)
+        window.addEventListener('load', () => {
+            music.currentTime = 95;
+            music.play().then(() => {
+                isPlaying = true;
+            }).catch(() => {
+                // Ruxsat berilmasa, foydalanuvchi ekranga tekkanda yuqoridagi 'startAudio' ishga tushadi
+            });
+        });
 
         // Orqa fonga emojilar chiqarish
         const emojiContainer = document.getElementById('emojiContainer');
@@ -217,7 +206,7 @@
 
         setInterval(createFloatingEmoji, 500);
 
-        // Telefon ekraniga mukammal moslashuvchi Canvas Yurak Animatsiyasi
+        // Canvas Yurak Animatsiyasi
         const canvas = document.getElementById("heartCanvas");
         const ctx = canvas.getContext("2d");
 
@@ -256,8 +245,8 @@
                 ctx.textBaseline = "middle";
                 ctx.fillText("I love you", x, y);
                 ctx.restore();
-                currentAngleIndex++;
 
+                currentAngleIndex++;
                 if (currentAngleIndex >= pointsPerRevolution) {
                     currentScale += 1;
                     currentAngleIndex = 0;
