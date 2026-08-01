@@ -7,10 +7,10 @@
     <style>
         * {
             box-sizing: border-box;
-        }
-        body {
             margin: 0;
             padding: 0;
+        }
+        body {
             background: linear-gradient(135deg, #1a000d 0%, #33001a 50%, #4d0026 100%);
             display: flex;
             flex-direction: column;
@@ -38,7 +38,7 @@
         .floating-emoji {
             position: absolute;
             bottom: -50px;
-            font-size: 22px;
+            font-size: 20px;
             animation: floatUp 6s infinite linear;
             opacity: 0.6;
         }
@@ -54,41 +54,65 @@
             }
         }
 
-        /* Mobil uchun yuqoridagi qism (She'r) */
-        .left-poem {
+        /* Musiqani yoqish uchun tugma */
+        .music-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            z-index: 10;
+            background: rgba(255, 105, 180, 0.3);
+            border: 1px solid #ffb6c1;
+            color: #ffb6c1;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
+        }
+
+        /* Yuqoridagi she'r qismi */
+        .top-poem {
             position: relative;
             z-index: 4;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 12px 16px;
-            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 12px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 182, 193, 0.3);
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
-            animation: fadeIn 2s ease-in-out;
-            width: 90%;
-            max-width: 350px;
-            margin-top: 15px;
+            width: 92%;
+            max-width: 340px;
+            margin-top: 40px; /* Tugma bilan ustma-ust tushmasligi uchun */
             text-align: center;
         }
 
-        .left-poem h3 {
-            margin: 0 0 5px 0;
+        .top-poem h3 {
+            margin: 0 0 2px 0;
             color: #ffb6c1;
-            font-size: 16px;
+            font-size: 14px;
         }
 
-        .left-poem p {
+        .top-poem p {
             margin: 0;
-            font-size: 13px;
-            line-height: 1.4;
+            font-size: 12px;
+            line-height: 1.3;
             font-style: italic;
             color: #ffc0cb;
         }
 
+        /* O'rtadagi Canvas (Yurak uchun) */
+        .canvas-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         #heartCanvas {
             display: block;
-            z-index: 2;
-            flex-grow: 1;
         }
 
         /* Pastdagi tabrik qismi */
@@ -98,48 +122,47 @@
             text-align: center;
             color: #ffb6c1;
             text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
-            animation: fadeIn 3s ease-in-out;
             width: 100%;
-            padding: 10px 15px 20px 15px;
-            background: linear-gradient(to top, rgba(26,0,13,0.9), transparent);
+            padding: 8px 10px 15px 10px;
+            background: linear-gradient(to top, rgba(26,0,13,0.95), transparent);
         }
         .dedication h2 {
-            margin: 0 0 3px 0;
-            font-size: 17px;
+            margin: 0 0 2px 0;
+            font-size: 15px;
             font-weight: 600;
         }
         .dedication .sub-title {
-            font-size: 15px;
+            font-size: 13px;
             color: #ffb6c1;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
         .dedication p {
             margin: 0;
-            font-size: 13px;
+            font-size: 11px;
             color: #ffc0cb;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
+    <!-- Musiqani yoqish tugmasi -->
+    <button class="music-btn" id="musicBtn">🎵 Musiqani yoqish</button>
 
     <!-- Orqa fondagi 💋 va boshqa emojilar -->
     <div class="bg-emojis" id="emojiContainer"></div>
 
-    <!-- Telefonga moslashgan she'r bloki (yuqoriga qo'yildi) -->
-    <div class="left-poem">
+    <!-- Telefonga moslashgan ixcham she'r -->
+    <div class="top-poem">
         <h3>Onajonim</h3>
         <p>
-            Olamda yagona oftobim, o'zing,<br>
-            Mehri daryo, nur sochgan yulduzim.<br>
-            Tug'ilgan kuningiz muborak bo'lsin, 💋
+            Olamda yagona oftobim, o'zing, Mehri daryo, nur sochgan yulduzim.<br>
+            Tug'ilgan kuningiz muborak bo'lsin! 💋
         </p>
     </div>
-    <canvas id="heartCanvas"></canvas>
+
+    <!-- Yurak chiqadigan joy -->
+    <div class="canvas-container">
+        <canvas id="heartCanvas"></canvas>
+    </div>
     
     <div class="dedication">
         <h2>7-Avgust Onajonimning Tug'ilgan Kunlari! 🌹</h2>
@@ -148,20 +171,31 @@
     </div>
 
     <!-- Fon qo'shig'i (Audio) -->
-    <audio id="bgMusic" autoplay loop>
+    <audio id="bgMusic" loop>
         <source src="https://cdns.freemusicarchive.org/storage/freemusicarchive/music/ccCommunity/KieLoBot/First_Snow/KieLoBot_-_01_-_A_Gentle_Breeze.mp3" type="audio/mp3">
     </audio>
 
     <script>
-        // Mobil brauzerlarda ovoz avtomatik ochilishi uchun ekranga tekkanda ishga tushadi
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        // Tugmani bosganda yoki ekranga tekkanda musiqa yangraydi
+        function playMusic() {
+            music.play().then(() => {
+                musicBtn.style.display = 'none'; // Musiqa yoqilgach tugmani yashirish
+            }).catch(e => {
+                console.log("Audio play error:", e);
+            });
+        }
+
+        musicBtn.addEventListener('click', playMusic);
         document.body.addEventListener('click', () => {
-            const music = document.getElementById('bgMusic');
             if (music.paused) {
-                music.play();
+                playMusic();
             }
         }, { once: true });
 
-        // Orqa fonga 💋 va yurak emojilarini chiqarish
+        // Orqa fonga emojilar chiqarish
         const emojiContainer = document.getElementById('emojiContainer');
         const emojisList = ['💋', '💖', '❤️', '🌹', '✨', '💋'];
 
@@ -172,7 +206,7 @@
             
             span.style.left = Math.random() * 100 + 'vw';
             span.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            span.style.fontSize = (Math.random() * 10 + 18) + 'px';
+            span.style.fontSize = (Math.random() * 8 + 16) + 'px';
             
             emojiContainer.appendChild(span);
 
@@ -181,20 +215,21 @@
             }, 7000);
         }
 
-        setInterval(createFloatingEmoji, 450);
+        setInterval(createFloatingEmoji, 500);
 
-        // Canvas Yurak Animatsiyasi
+        // Telefon ekraniga mukammal moslashuvchi Canvas Yurak Animatsiyasi
         const canvas = document.getElementById("heartCanvas");
         const ctx = canvas.getContext("2d");
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight * 0.5; // Mobil ekranga qarab o'lcham
+        function setupCanvasSize() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
         }
-        resizeCanvas();
+        setupCanvasSize();
 
-        let currentScale = 10; 
-        const maxScale = 14; // Telefon ekraniga sig'ishi uchun scale biroz kichiklashtirildi
+        let currentScale = 9; 
+        const maxScale = 13; 
         let currentAngleIndex = 0; 
         const pointsPerRevolution = 120; 
         const pointsPerFrame = 1; 
@@ -215,13 +250,12 @@
 
                 ctx.save();
                 ctx.translate(centerX, centerY);
-                ctx.font = "bold 8px Arial";
+                ctx.font = "bold 7px Arial";
                 ctx.fillStyle = "#ffb6c1";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 ctx.fillText("I love you", x, y);
                 ctx.restore();
-
                 currentAngleIndex++;
 
                 if (currentAngleIndex >= pointsPerRevolution) {
@@ -238,7 +272,7 @@
         }, 500);
 
         window.addEventListener('resize', () => {
-            resizeCanvas();
+            setupCanvasSize();
         });
     </script>
 
